@@ -25,7 +25,7 @@
 1. Клонируйте репозиторий:
 ```bash
 git clone https://github.com/Nimblen/Stripe.git
-cd ваш_проект
+cd Stripe
 ```
 Установите зависимости:
 ```bash

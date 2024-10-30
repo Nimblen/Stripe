@@ -48,11 +48,11 @@ docker run -d -p 6379:6379 redis
 
 Запустите сервер FastAPI:
 ```bash
-uvicorn main:app --host 0.0.0.0 --port 8000
+uvicorn server:app --host 0.0.0.0 --port 8000
 ```
 Запустите Celery воркера для фоновой обработки задач:
 ```bash
-celery -A celery_config.celery_app worker --loglevel=info
+celery -A config.celery_app worker --loglevel=info
 ```
 Для локального тестирования вебхуков Stripe можно использовать ngrok для проброса порта:
 ```bash

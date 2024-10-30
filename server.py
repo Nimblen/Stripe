@@ -2,11 +2,10 @@ from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
 from task import process_webhook
 import stripe
 import logging
-from config import STRIPE_SK_TOKEN, STRIPE_WH_TOKEN
+import config
 
 app = FastAPI()
-stripe.api_key = STRIPE_SK_TOKEN
-endpoint_secret = STRIPE_WH_TOKEN
+
 
 logger = logging.getLogger("stripe_webhook")
 logging.basicConfig(level=logging.INFO)
@@ -18,7 +17,7 @@ async def stripe_webhook(request: Request, background_tasks: BackgroundTasks):
 
     try:
         # Проверяем подлинность запроса от Stripe
-        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+        event = stripe.Webhook.construct_event(payload, sig_header, config.STRIPE_WH_TOKEN)
     except (ValueError, stripe.error.SignatureVerificationError) as e:
         logger.error("Ошибка проверки подписи вебхука: %s", str(e))
         raise HTTPException(status_code=400, detail="Invalid signature")

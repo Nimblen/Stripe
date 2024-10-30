@@ -5,24 +5,32 @@ import config
 
 def create_checkout_session():
     try:
-        # Создание Checkout Session
         session = stripe.checkout.Session.create(
-            payment_method_types=['card'],   # Типы методов оплаты, например, только карта
-            line_items=[                     # Товары для оплаты
+            payment_method_types=['card'],   # Типы методов оплаты
+            line_items=[
                 {
                     'price_data': {
-                        'currency': 'usd',
+                        'currency': 'USD',
                         'product_data': {
-                            'name': 'Товар или услуга',  # Название товара
+                            'name': 'Оплата услуги',
+                            'description': 'Оплата услуги',
                         },
-                        'unit_amount': 2000,  # Сумма в центах (например, $20.00)
+                        'unit_amount': 6000,  # Сумма в центах (например, $60.00)
                     },
                     'quantity': 1,
                 },
             ],
-            mode='payment',                   # Режим "payment" для одноразовой оплаты
-            success_url='https://t.me/bot_username',  # URL для успешного платежа
-            cancel_url='https://t.me/bot_username',  # URL при отмене оплаты
+            mode='payment',  # Одноразовая оплата
+            metadata={        # Дополнительные данные для идентификации
+                'sender': 'message.chat.id',
+                'connectorID': 1,
+                'customerID': 1,
+                'employeeID': 1,
+                'label': 'dev',
+                'invoice_payload': 'Некая строка'
+            },
+            success_url='https://t.me/yourbot',  # URL успешного платежа
+            cancel_url='https://t.me/yourbot',  # URL при отмене
         )
         # Возвращаем URL сессии
         return session.url
@@ -30,6 +38,6 @@ def create_checkout_session():
         print(f"Ошибка при создании сессии оплаты: {e}")
         return None
 
-# Вызов функции
+# Вызов функции для генерации ссылки
 checkout_url = create_checkout_session()
 print(f"Ссылка для оплаты: {checkout_url}")

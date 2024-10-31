@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
-from task import process_webhook
+from server.task import process_webhook
 import stripe
 import logging
-import config
+import server.config as config
 
 app = FastAPI()
-
+stripe.api_key = config.STRIPE_SK_TOKEN
 
 logger = logging.getLogger("stripe_webhook")
 logging.basicConfig(level=logging.INFO)

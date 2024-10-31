@@ -1,5 +1,5 @@
 import stripe 
-import config
+from server import config
 
 
 

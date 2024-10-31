@@ -3,18 +3,18 @@ import stripe
 from dotenv import load_dotenv
 import os
 
-
 load_dotenv()
 
+# Настройка Stripe
 STRIPE_SK_TOKEN = os.getenv("STRIPE_SK_TOKEN")
 STRIPE_WH_TOKEN = os.getenv("STRIPE_WH_TOKEN")
 stripe.api_key = STRIPE_SK_TOKEN
 
-
+# Настройка Celery
 celery_app = Celery(
     "stripe_webhooks",
-    broker="redis://localhost:6379/0", 
-    backend="redis://localhost:6379/1"
+    broker=os.getenv("CELERY_BROKER_URL"),
+    backend=os.getenv("CELERY_RESULT_BACKEND")
 )
 
 celery_app.conf.update(
@@ -23,4 +23,6 @@ celery_app.conf.update(
     result_serializer="json",
     timezone="UTC",
     enable_utc=True,
+    broker_connection_retry_on_startup=True
 )
+import server.task
